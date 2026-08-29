@@ -1,0 +1,15 @@
+import dash
+from dash import html
+
+dash.register_page(__name__, path="/", name="Home")
+
+layout = html.Div(
+    [
+        html.H1("Home"),
+        html.P(
+            "Every .py file in pages/ that calls dash.register_page() "
+            "becomes a route automatically; this one is '/'. "
+            "Add pages/reports.py and it appears in the nav with no other wiring."
+        ),
+    ]
+)

@@ -1,0 +1,14 @@
+# {{app_title}}
+# build:  docker build -t {{app_name}} .
+# run:    docker run -p 8050:8050 {{app_name}}
+FROM python:3.13-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
+
+COPY . .
+
+EXPOSE 8050
+CMD ["gunicorn", "app:server", "--bind", "0.0.0.0:8050", "--workers", "2"]

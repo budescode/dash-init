@@ -1,0 +1,43 @@
+# {{app_title}}, created with dash-app on {{create_date}}
+from pathlib import Path
+
+import pandas as pd
+from dash import Dash, html, dcc, callback, Input, Output
+import plotly.express as px
+
+DATA_FILE = Path(__file__).parent / "data" / "sample.csv"
+
+app = Dash(__name__, title="{{app_title}}")
+server = app.server  # exposed for production servers, e.g. gunicorn app:server
+
+# Replace data/sample.csv with your own file, then adjust the
+# column names ('date', 'region', 'sales') below to match it.
+df = pd.read_csv(DATA_FILE, parse_dates=["date"])
+
+app.layout = html.Div(
+    [
+        html.H1("{{app_title}}"),
+        html.P("Data loaded from data/sample.csv; swap in your own file."),
+        dcc.Dropdown(
+            sorted(df["region"].unique()),
+            sorted(df["region"].unique())[0],
+            id="region",
+            clearable=False,
+        ),
+        dcc.Graph(id="sales-chart"),
+    ],
+    className="container",
+)
+
+
+@callback(Output("sales-chart", "figure"), Input("region", "value"))
+def update_chart(region):
+    dff = df[df["region"] == region]
+    return px.line(
+        dff, x="date", y="sales", markers=True,
+        title=f"Sales in {region}", template="plotly_white",
+    )
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

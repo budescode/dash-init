@@ -1,0 +1,25 @@
+name: test
+
+on:
+  push:
+  pull_request:
+  schedule:
+    # weekly run against latest Dash; catches template rot even without commits
+    - cron: "0 6 * * 1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e . pytest dash pandas dash-bootstrap-components
+      - run: pytest -v
+        env:
+          DASH_APP_NETWORK_TESTS: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

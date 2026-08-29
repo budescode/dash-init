@@ -1,0 +1,31 @@
+# {{app_title}}, created with dash-app on {{create_date}}
+from dash import Dash, html, dcc, callback, Input, Output
+import plotly.express as px
+
+app = Dash(__name__, title="{{app_title}}")
+server = app.server  # exposed for production servers, e.g. gunicorn app:server
+
+df = px.data.gapminder()  # built-in sample data, replace with your own
+
+app.layout = html.Div(
+    [
+        html.H1("{{app_title}}"),
+        html.P("Pick a continent; the chart updates through a Dash callback."),
+        dcc.Dropdown(sorted(df["continent"].unique()), "Europe", id="continent"),
+        dcc.Graph(id="life-exp"),
+    ],
+    className="container",
+)
+
+
+@callback(Output("life-exp", "figure"), Input("continent", "value"))
+def update_chart(continent):
+    dff = df[df["continent"] == continent]
+    return px.line(
+        dff, x="year", y="lifeExp", color="country",
+        title=f"Life expectancy in {continent}", template="plotly_white",
+    )
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

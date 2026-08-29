@@ -1,0 +1,24 @@
+import dash
+from dash import html, dcc, callback, Input, Output
+import plotly.express as px
+
+dash.register_page(__name__, name="Analytics")
+
+df = px.data.gapminder()  # built-in sample data, replace with your own
+
+layout = html.Div(
+    [
+        html.H1("Analytics"),
+        dcc.Dropdown(sorted(df["continent"].unique()), "Europe", id="continent"),
+        dcc.Graph(id="life-exp"),
+    ]
+)
+
+
+@callback(Output("life-exp", "figure"), Input("continent", "value"))
+def update_chart(continent):
+    dff = df[df["continent"] == continent]
+    return px.line(
+        dff, x="year", y="lifeExp", color="country",
+        title=f"Life expectancy in {continent}", template="plotly_white",
+    )

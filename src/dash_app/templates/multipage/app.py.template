@@ -1,0 +1,28 @@
+# {{app_title}}, created with dash-app on {{create_date}}
+from dash import Dash, html, dcc, page_container, page_registry
+
+app = Dash(__name__, use_pages=True, title="{{app_title}}")
+server = app.server  # exposed for production servers, e.g. gunicorn app:server
+
+app.layout = html.Div(
+    [
+        html.Div(
+            [
+                html.H2("{{app_title}}", className="nav-title"),
+                html.Nav(
+                    [
+                        dcc.Link(page["name"], href=page["relative_path"], className="nav-link")
+                        for page in page_registry.values()
+                    ],
+                    className="nav-links",
+                ),
+            ],
+            className="nav",
+        ),
+        page_container,
+    ],
+    className="container",
+)
+
+if __name__ == "__main__":
+    app.run(debug=True)

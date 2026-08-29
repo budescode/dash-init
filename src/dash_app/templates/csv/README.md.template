@@ -1,0 +1,59 @@
+# {{app_title}}
+
+A [Plotly Dash](https://dash.plotly.com) app that charts a CSV file,
+scaffolded with [dash-app](https://github.com/budescode/dash-app)
+on {{create_date}}.
+
+## Run it
+
+```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python app.py
+```
+
+Or with [uv](https://docs.astral.sh/uv/) (reads `pyproject.toml`):
+
+```bash
+uv sync
+uv run app.py
+```
+
+Then open http://127.0.0.1:8050 in your browser.
+
+## Use your own data
+
+1. Drop your CSV into `data/` (or replace `sample.csv`)
+2. In `app.py`, update `DATA_FILE` and the column names
+   (`date`, `region`, `sales`) to match your file
+3. Restart the app
+
+## Project layout
+
+| Path               | Purpose                                               |
+| ------------------ | ----------------------------------------------------- |
+| `app.py`           | Loads the CSV, layout + callback                      |
+| `data/sample.csv`  | Sample data, replace with your own                   |
+| `assets/`          | CSS/JS files here are auto-loaded by Dash, no config |
+| `requirements.txt` | Python dependencies (pip)                             |
+| `pyproject.toml`   | Same deps + metadata (uv, poetry)                     |
+
+## Deploy
+
+**Plotly Cloud**, the official hosting, free tier available:
+
+```bash
+pip install "dash[cloud]"
+plotly user login
+plotly app publish
+```
+
+The first publish creates a `plotly-cloud.toml` here; commit it, so future
+publishes update the same app. Re-publish anytime with `plotly app publish`.
+
+**Any WSGI host**: `app.py` exposes `server = app.server`:
+
+```bash
+pip install gunicorn
+gunicorn app:server
+```

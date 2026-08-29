@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dash-app"
+version = "0.1.0"
+description = "Project generator for Plotly Dash: one command to a running app."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Osakpolor Emmanuel Omonbude", email = "omonbude.emma@gmail.com" },
+]
+requires-python = ">=3.9"
+keywords = ["dash", "plotly", "scaffold", "generator", "cli", "boilerplate"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Code Generators",
+]
+
+[project.urls]
+Repository = "https://github.com/budescode/dash-app"
+
+[project.scripts]
+dash-app = "dash_app.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+dash_app = ["templates/**/*", "addons/**/*", "registry.json"]

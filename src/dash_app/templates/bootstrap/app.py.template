@@ -1,0 +1,74 @@
+# {{app_title}}, created with dash-app on {{create_date}}
+from dash import Dash, html, dcc, callback, Input, Output
+import dash_bootstrap_components as dbc
+import plotly.express as px
+
+app = Dash(
+    __name__,
+    title="{{app_title}}",
+    external_stylesheets=[dbc.themes.FLATLY, dbc.icons.BOOTSTRAP],
+)
+server = app.server  # exposed for production servers, e.g. gunicorn app:server
+
+df = px.data.tips()  # built-in sample data, replace with your own
+
+sidebar = html.Div(
+    [
+        html.H4(
+            [html.I(className="bi bi-speedometer2 me-2"), "{{app_title}}"],
+            className="mb-3",
+        ),
+        html.Hr(),
+        dbc.Label("Day"),
+        dcc.Dropdown(sorted(df["day"].unique()), "Sat", id="day", clearable=False),
+    ],
+    className="p-3 bg-light h-100",
+)
+
+content = html.Div(
+    [
+        dbc.Row(
+            [
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([html.H6("Total bills"), html.H3(id="kpi-total")])
+                    ),
+                    md=6,
+                ),
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([html.H6("Average tip"), html.H3(id="kpi-tip")])
+                    ),
+                    md=6,
+                ),
+            ],
+            className="mb-3",
+        ),
+        dbc.Card(dbc.CardBody(dcc.Graph(id="scatter"))),
+    ],
+    className="p-3",
+)
+
+app.layout = dbc.Container(
+    dbc.Row([dbc.Col(sidebar, md=3), dbc.Col(content, md=9)]),
+    fluid=True,
+)
+
+
+@callback(
+    Output("scatter", "figure"),
+    Output("kpi-total", "children"),
+    Output("kpi-tip", "children"),
+    Input("day", "value"),
+)
+def update(day):
+    dff = df[df["day"] == day]
+    fig = px.scatter(
+        dff, x="total_bill", y="tip", color="smoker",
+        title=f"Tips vs bills ({day})", template="plotly_white",
+    )
+    return fig, f"${dff['total_bill'].sum():,.0f}", f"${dff['tip'].mean():.2f}"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,0 +1,23 @@
+{
+  "_comment": "Curated remote templates. `ref` is pinned to a commit so a hub change cannot break users; bump it deliberately after re-testing. Not listed: dash-ecommerce-admin (needs a Kaggle dataset that is not in the repo), whatsapp-clone (needs Postgres + Docker Compose).",
+  "repo": "budescode/dash-templates-hub",
+  "ref": "2419d8f19c37fd6a3b54775aa72ccc5de97178f1",
+  "templates": {
+    "admin-dashboard": {
+      "path": "dash-admin-dashboard",
+      "description": "General-purpose admin dashboard (light, modern)"
+    },
+    "kiaalap": {
+      "path": "dash-kiaalap",
+      "description": "Education-management dashboard, 50+ pages (light, indigo)"
+    },
+    "nalika": {
+      "path": "dash-nalika",
+      "description": "Analytics-focused dashboard (dark, professional)"
+    },
+    "purity-ui": {
+      "path": "dash-purity-ui-dashboard",
+      "description": "Purity UI admin dashboard port"
+    }
+  }
+}

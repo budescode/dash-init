@@ -1,0 +1,35 @@
+/* Dash auto-loads every .css file in assets/, no imports needed. */
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.nav {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+}
+
+.nav-title {
+    margin: 0;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #0066cc;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
