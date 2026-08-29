@@ -17,6 +17,7 @@ import os
 import re
 import shutil
 import tempfile
+import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -96,10 +97,26 @@ def _headers() -> dict[str, str]:
     return h
 
 
+RETRIES = 3          # attempts per URL before giving up
+RETRY_STATUSES = (429, 500, 502, 503, 504)
+
+
 def _get_bytes(url: str) -> bytes:
-    req = urllib.request.Request(url, headers=_headers())
-    with urllib.request.urlopen(req, timeout=30) as r:  # noqa: S310 (https only)
-        return r.read()
+    """GET ``url``; retry transient failures (resets, timeouts, 5xx) with backoff."""
+    for attempt in range(RETRIES):
+        try:
+            req = urllib.request.Request(url, headers=_headers())
+            with urllib.request.urlopen(req, timeout=30) as r:  # noqa: S310 (https only)
+                return r.read()
+        except urllib.error.HTTPError as e:
+            if e.code not in RETRY_STATUSES or attempt == RETRIES - 1:
+                raise
+        except (urllib.error.URLError, OSError):
+            # ConnectionResetError, timeouts, DNS blips: worth another try
+            if attempt == RETRIES - 1:
+                raise
+        time.sleep(0.5 * 2 ** attempt)
+    raise AssertionError("unreachable")
 
 
 def _get_json(url: str) -> dict:
@@ -172,7 +189,7 @@ def fetch(spec: RemoteSpec, dest: Path) -> list[Path]:
             return target
 
         try:
-            with ThreadPoolExecutor(max_workers=8) as pool:
+            with ThreadPoolExecutor(max_workers=4) as pool:
                 list(pool.map(grab, files))
         except (urllib.error.URLError, OSError) as e:
             raise _explain(e, spec) from None

@@ -133,3 +133,41 @@ def test_registry_template_fetches(name, tmp_path):
     assert (project / "pyproject.toml").is_file()
     assert (project / "requirements.txt").is_file()
     assert not list(project.rglob("__pycache__")) and not (project / "screenshots").exists()
+
+
+# --------------------------------------------------------------------------- #
+# transient network errors are retried
+# --------------------------------------------------------------------------- #
+
+def test_get_bytes_retries_transient_errors(monkeypatch):
+    import io
+    import urllib.error
+
+    calls = []
+
+    def urlopen(req, timeout):
+        calls.append(req.full_url)
+        if len(calls) < 3:
+            raise urllib.error.URLError(ConnectionResetError(104, "Connection reset by peer"))
+        return io.BytesIO(b"ok")
+
+    monkeypatch.setattr(remote.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(remote.time, "sleep", lambda s: None)
+    assert remote._get_bytes("https://example.invalid/x") == b"ok"
+    assert len(calls) == 3
+
+
+def test_get_bytes_does_not_retry_404(monkeypatch):
+    import urllib.error
+
+    calls = []
+
+    def urlopen(req, timeout):
+        calls.append(1)
+        raise urllib.error.HTTPError(req.full_url, 404, "Not Found", {}, None)
+
+    monkeypatch.setattr(remote.urllib.request, "urlopen", urlopen)
+    monkeypatch.setattr(remote.time, "sleep", lambda s: None)
+    with pytest.raises(urllib.error.HTTPError):
+        remote._get_bytes("https://example.invalid/x")
+    assert len(calls) == 1
