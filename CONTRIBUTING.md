@@ -6,7 +6,7 @@ Contributions are welcome. Bug reports, feature requests, new templates, documen
 
 ## Reporting a bug
 
-1. Check the [existing issues](https://github.com/budescode/dash-app/issues) first to avoid duplicates.
+1. Check the [existing issues](https://github.com/budescode/dash-init/issues) first to avoid duplicates.
 2. Open a new issue and include:
    - A clear title describing the problem
    - The exact `dash-init` command you ran
@@ -89,7 +89,7 @@ Bump the pinned `ref` in `registry.json` only after re-running the network tests
 
 ## Questions
 
-For general questions, open a [GitHub Discussion](https://github.com/budescode/dash-app/discussions) rather than an issue.
+For general questions, open a [GitHub Discussion](https://github.com/budescode/dash-init/discussions) rather than an issue.
 
 ---
 

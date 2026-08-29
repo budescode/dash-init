@@ -1,7 +1,7 @@
 # {{app_title}}
 
 A [Plotly Dash](https://dash.plotly.com) app, scaffolded with
-[dash-init](https://github.com/budescode/dash-app) on {{create_date}}.
+[dash-init](https://github.com/budescode/dash-init) on {{create_date}}.
 
 ## Run it
 

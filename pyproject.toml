@@ -23,7 +23,7 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/budescode/dash-app"
+Repository = "https://github.com/budescode/dash-init"
 
 [project.scripts]
 dash-init = "dash_init.cli:main"

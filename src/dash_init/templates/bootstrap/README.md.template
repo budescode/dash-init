@@ -3,7 +3,7 @@
 A [Plotly Dash](https://dash.plotly.com) dashboard with a
 [Dash Bootstrap Components](https://dash-bootstrap-components.opensource.faculty.ai)
 sidebar layout, scaffolded with
-[dash-init](https://github.com/budescode/dash-app) on {{create_date}}.
+[dash-init](https://github.com/budescode/dash-init) on {{create_date}}.
 
 ## Run it
 
