@@ -82,6 +82,10 @@ def _next_steps(app_name: str, entry: str, docker: bool) -> str:
         "  python -m venv .venv && source .venv/bin/activate   # Windows: .venv\\Scripts\\activate\n"
         "  pip install -r requirements.txt\n"
         f"  python {entry}\n"
+        "\nOr with uv:\n"
+        f"  cd {app_name}\n"
+        "  uv sync\n"
+        f"  uv run {entry}\n"
     )
     if docker:
         text += (
