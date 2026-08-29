@@ -23,7 +23,7 @@ What actually happened. Include any error messages or tracebacks.
 
 **Environment**
 - Python version:
-- dash-app version (`dash-app --version`):
+- dash-init version (`dash-init --version`):
 - Template used (built-in name, hub name, or `gh:` spec):
 - OS:
 

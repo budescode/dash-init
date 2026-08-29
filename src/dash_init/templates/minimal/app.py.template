@@ -1,4 +1,4 @@
-# {{app_title}}, created with dash-app on {{create_date}}
+# {{app_title}}, created with dash-init on {{create_date}}
 from dash import Dash, html, dcc, callback, Input, Output
 import plotly.express as px
 

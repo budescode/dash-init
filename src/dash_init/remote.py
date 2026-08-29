@@ -78,7 +78,7 @@ def parse_spec(name: str) -> RemoteSpec | None:
             body, ref = body.rsplit("@", 1)
         parts = [p for p in body.split("/") if p]
         if len(parts) < 2:
-            raise SystemExit(f"dash-app: bad template spec {name!r}, expected gh:owner/repo[/sub/dir][@ref]")
+            raise SystemExit(f"dash-init: bad template spec {name!r}, expected gh:owner/repo[/sub/dir][@ref]")
         owner, repo, *sub = parts
         return RemoteSpec(owner, repo, "/".join(sub), ref)
     return None
@@ -89,7 +89,7 @@ def parse_spec(name: str) -> RemoteSpec | None:
 # --------------------------------------------------------------------------- #
 
 def _headers() -> dict[str, str]:
-    h = {"User-Agent": "dash-app", "Accept": "application/vnd.github+json"}
+    h = {"User-Agent": "dash-init", "Accept": "application/vnd.github+json"}
     token = os.environ.get("GITHUB_TOKEN")
     if token:
         h["Authorization"] = f"Bearer {token}"
@@ -109,15 +109,15 @@ def _get_json(url: str) -> dict:
 def _explain(err: Exception, spec: RemoteSpec) -> SystemExit:
     if isinstance(err, urllib.error.HTTPError):
         if err.code == 404:
-            return SystemExit(f"dash-app: {spec.slug} not found on GitHub (check owner/repo, path and ref)")
+            return SystemExit(f"dash-init: {spec.slug} not found on GitHub (check owner/repo, path and ref)")
         if err.code in (403, 429):
             return SystemExit(
-                "dash-app: GitHub API rate limit hit. Set GITHUB_TOKEN to raise it, or try again later"
+                "dash-init: GitHub API rate limit hit. Set GITHUB_TOKEN to raise it, or try again later"
             )
-        return SystemExit(f"dash-app: GitHub returned HTTP {err.code} for {spec.slug}")
+        return SystemExit(f"dash-init: GitHub returned HTTP {err.code} for {spec.slug}")
     if isinstance(err, urllib.error.URLError):
-        return SystemExit(f"dash-app: could not reach GitHub ({err.reason}). Are you online?")
-    return SystemExit(f"dash-app: failed to fetch {spec.slug}: {err}")
+        return SystemExit(f"dash-init: could not reach GitHub ({err.reason}). Are you online?")
+    return SystemExit(f"dash-init: failed to fetch {spec.slug}: {err}")
 
 
 # --------------------------------------------------------------------------- #
@@ -137,7 +137,7 @@ def _list_files(spec: RemoteSpec) -> tuple[str, list[str]]:
         ref = _get_json(f"{API}/repos/{spec.owner}/{spec.repo}")["default_branch"]
     tree = _get_json(f"{API}/repos/{spec.owner}/{spec.repo}/git/trees/{ref}?recursive=1")
     if tree.get("truncated"):
-        raise SystemExit(f"dash-app: {spec.slug} is too large to list via the GitHub API")
+        raise SystemExit(f"dash-init: {spec.slug} is too large to list via the GitHub API")
     prefix = spec.path.rstrip("/") + "/" if spec.path else ""
     files = []
     for entry in tree["tree"]:
@@ -148,7 +148,7 @@ def _list_files(spec: RemoteSpec) -> tuple[str, list[str]]:
             continue
         files.append(str(rel))
     if not files:
-        raise SystemExit(f"dash-app: no files found at {spec.slug}")
+        raise SystemExit(f"dash-init: no files found at {spec.slug}")
     return tree["sha"], files
 
 
@@ -163,7 +163,7 @@ def fetch(spec: RemoteSpec, dest: Path) -> list[Path]:
     if spec.path:
         base += spec.path.rstrip("/") + "/"
 
-    staging = Path(tempfile.mkdtemp(prefix=".dash-app-", dir=dest.parent))
+    staging = Path(tempfile.mkdtemp(prefix=".dash-init-", dir=dest.parent))
     try:
         def grab(rel: str) -> Path:
             target = staging / rel

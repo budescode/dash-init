@@ -1,4 +1,4 @@
-# Contributing to dash-app
+# Contributing to dash-init
 
 Contributions are welcome. Bug reports, feature requests, new templates, documentation improvements, and code changes.
 
@@ -9,9 +9,9 @@ Contributions are welcome. Bug reports, feature requests, new templates, documen
 1. Check the [existing issues](https://github.com/budescode/dash-app/issues) first to avoid duplicates.
 2. Open a new issue and include:
    - A clear title describing the problem
-   - The exact `dash-app` command you ran
+   - The exact `dash-init` command you ran
    - What you expected vs what actually happened
-   - Your Python version, dash-app version, and OS
+   - Your Python version, dash-init version, and OS
    - Any relevant error messages or tracebacks
 
 ---
@@ -45,14 +45,14 @@ pip install -e . pytest dash pandas dash-bootstrap-components
 
 ```bash
 pytest                             # built-in templates and offline remote tests
-DASH_APP_NETWORK_TESTS=1 pytest    # also fetches every hub template
+DASH_INIT_NETWORK_TESTS=1 pytest    # also fetches every hub template
 ```
 
 The test suite generates every built-in template and boots the resulting app. If `pytest` is green, your change works.
 
 - Keep changes focused. One fix or feature per PR
 - Don't change unrelated code
-- Don't add runtime dependencies. dash-app is standard library only
+- Don't add runtime dependencies. dash-init is standard library only
 
 **4. Open the pull request**
 
@@ -63,7 +63,7 @@ The test suite generates every built-in template and boots the resulting app. If
 
 ## Adding a built-in template
 
-Templates are plain folders under `src/dash_app/templates/<name>/`. No Python needed:
+Templates are plain folders under `src/dash_init/templates/<name>/`. No Python needed:
 
 1. Create the folder and add your files, suffixed with `.template` (`app.py.template`, `README.md.template`)
 2. Prefix dotfiles with `dot_` (`dot_gitignore.template` becomes `.gitignore`)
@@ -76,11 +76,11 @@ Templates are plain folders under `src/dash_app/templates/<name>/`. No Python ne
 
 ## Adding a hub template
 
-Hub templates live in [dash-templates-hub](https://github.com/budescode/dash-templates-hub) and are listed in `src/dash_app/registry.json`.
+Hub templates live in [dash-templates-hub](https://github.com/budescode/dash-templates-hub) and are listed in `src/dash_init/registry.json`.
 
 1. Make sure the template runs from a clean checkout with `python app.py` (no missing data files, no external services)
 2. Add an entry to `registry.json` with its folder name and a one-line description
-3. Run `DASH_APP_NETWORK_TESTS=1 pytest` to confirm it fetches and configures
+3. Run `DASH_INIT_NETWORK_TESTS=1 pytest` to confirm it fetches and configures
 4. Add it to the hub table in `README.md`
 
 Bump the pinned `ref` in `registry.json` only after re-running the network tests.

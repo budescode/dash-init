@@ -2,7 +2,7 @@ import runpy
 
 import pytest
 
-from dash_app.cli import available_templates, init, main
+from dash_init.cli import available_templates, init, main
 
 # extra import requirements per template, for smoke-run skipping
 TEMPLATE_DEPS = {"bootstrap": ["dash_bootstrap_components"]}

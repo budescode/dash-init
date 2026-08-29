@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dash-app"
+name = "dash-init"
 version = "0.1.0"
 description = "Project generator for Plotly Dash: one command to a running app."
 readme = "README.md"
@@ -26,10 +26,10 @@ classifiers = [
 Repository = "https://github.com/budescode/dash-app"
 
 [project.scripts]
-dash-app = "dash_app.cli:main"
+dash-init = "dash_init.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-dash_app = ["templates/**/*", "addons/**/*", "registry.json"]
+dash_init = ["templates/**/*", "addons/**/*", "registry.json"]

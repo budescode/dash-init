@@ -4,9 +4,9 @@ import runpy
 
 import pytest
 
-from dash_app import remote
-from dash_app.cli import init
-from dash_app.remote import RemoteSpec, parse_spec
+from dash_init import remote
+from dash_init.cli import init
+from dash_init.remote import RemoteSpec, parse_spec
 
 
 # --------------------------------------------------------------------------- #
@@ -113,7 +113,7 @@ def test_failed_fetch_leaves_no_partial_project(fake_github, tmp_path, monkeypat
     with pytest.raises(SystemExit):
         init("my-app", "gh:acme/hub/tpl", tmp_path)
     assert not (tmp_path / "my-app").exists()
-    assert not list(tmp_path.glob(".dash-app-*")), "staging dir must be cleaned up"
+    assert not list(tmp_path.glob(".dash-init-*")), "staging dir must be cleaned up"
 
 
 # --------------------------------------------------------------------------- #
@@ -121,7 +121,7 @@ def test_failed_fetch_leaves_no_partial_project(fake_github, tmp_path, monkeypat
 # --------------------------------------------------------------------------- #
 
 needs_network = pytest.mark.skipif(
-    not os.environ.get("DASH_APP_NETWORK_TESTS"), reason="set DASH_APP_NETWORK_TESTS=1"
+    not os.environ.get("DASH_INIT_NETWORK_TESTS"), reason="set DASH_INIT_NETWORK_TESTS=1"
 )
 
 

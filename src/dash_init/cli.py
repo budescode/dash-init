@@ -1,4 +1,4 @@
-"""dash-app: scaffold a new Plotly Dash project.
+"""dash-init: scaffold a new Plotly Dash project.
 
 Templates are plain directories under ``templates/``. Every file in a
 template is copied with token substitution. Two filename conventions:
@@ -101,20 +101,20 @@ def init(app_name: str, template: str, parent: Path, docker: bool = False) -> Pa
     """Create a new project directory from a template. Returns its path."""
     if not NAME_RE.fullmatch(app_name):
         raise SystemExit(
-            f"dash-app: invalid project name {app_name!r}. Use letters, "
+            f"dash-init: invalid project name {app_name!r}. Use letters, "
             "digits, '.', '-' and '_', starting with a letter"
         )
     spec = remote.parse_spec(template)
     builtins = available_templates()
     if spec is None and template not in builtins:
         raise SystemExit(
-            f"dash-app: unknown template {template!r}; "
+            f"dash-init: unknown template {template!r}; "
             f"available: {', '.join(builtins + sorted(remote.registry_templates()))} "
             "or gh:owner/repo[/sub/dir][@ref]"
         )
     project_dir = parent / app_name
     if project_dir.exists() and any(project_dir.iterdir()):
-        raise SystemExit(f"dash-app: directory {project_dir} already exists and is not empty")
+        raise SystemExit(f"dash-init: directory {project_dir} already exists and is not empty")
 
     notes: list[str] = []
     if spec is None:
@@ -140,20 +140,20 @@ def init(app_name: str, template: str, parent: Path, docker: bool = False) -> Pa
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        prog="dash-app",
+        prog="dash-init",
         description="Project tooling for Plotly Dash.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "examples:\n"
-            "  dash-app create my-dashboard\n"
-            "  dash-app create sales-app -t bootstrap\n"
-            "  dash-app create api-monitor -t multipage --docker\n"
-            "  dash-app create shop -t ecommerce-admin\n"
-            "  dash-app create demo -t gh:someone/repo/examples/app\n"
-            "  dash-app templates\n"
+            "  dash-init create my-dashboard\n"
+            "  dash-init create sales-app -t bootstrap\n"
+            "  dash-init create api-monitor -t multipage --docker\n"
+            "  dash-init create shop -t ecommerce-admin\n"
+            "  dash-init create demo -t gh:someone/repo/examples/app\n"
+            "  dash-init templates\n"
         ),
     )
-    parser.add_argument("-V", "--version", action="version", version=f"dash-app {__version__}")
+    parser.add_argument("-V", "--version", action="version", version=f"dash-init {__version__}")
     sub = parser.add_subparsers(dest="command", metavar="<command>")
 
     create = sub.add_parser(

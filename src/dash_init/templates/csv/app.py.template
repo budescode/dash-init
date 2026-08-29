@@ -1,4 +1,4 @@
-# {{app_title}}, created with dash-app on {{create_date}}
+# {{app_title}}, created with dash-init on {{create_date}}
 from pathlib import Path
 
 import pandas as pd

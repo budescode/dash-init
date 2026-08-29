@@ -1,10 +1,10 @@
-# dash-app
+# dash-init
 
 **Project generator for [Plotly Dash](https://dash.plotly.com): one command to a running app.**
 
 ```bash
-pip install dash-app
-dash-app create my-dashboard
+pip install dash-init
+dash-init create my-dashboard
 cd my-dashboard
 pip install -r requirements.txt     # or: uv sync
 python app.py                       # or: uv run app.py
@@ -31,19 +31,19 @@ Cloud, any Python host, or Docker with `--docker`).
 
 Generated projects target **Python 3.11+** and pin current versions:
 `dash>=4.4.1`, `pandas>=3.0.5`, `dash-bootstrap-components>=2.0.4` (bootstrap
-template). The `dash-app` tool itself runs on Python 3.9+ and has no
+template). The `dash-init` tool itself runs on Python 3.9+ and has no
 dependencies.
 
 ## Usage
 
 ```
-dash-app create <name>                      create a project from the default (minimal) template
-dash-app create <name> -t <template>        choose a built-in or hub template
-dash-app create <name> -t gh:owner/repo/sub/dir[@ref]
+dash-init create <name>                      create a project from the default (minimal) template
+dash-init create <name> -t <template>        choose a built-in or hub template
+dash-init create <name> -t gh:owner/repo/sub/dir[@ref]
                                             pull any directory on GitHub as a template
-dash-app create <name> --docker             also generate a Dockerfile + .dockerignore (alias: --dockerfile)
-dash-app templates                          list everything available
-dash-app --version
+dash-init create <name> --docker             also generate a Dockerfile + .dockerignore (alias: --dockerfile)
+dash-init templates                          list everything available
+dash-init --version
 ```
 
 `create` refuses to overwrite a non-empty directory and never installs
@@ -78,7 +78,7 @@ are available by name and downloaded when you run `create`:
 | `purity-ui`       | Purity UI admin dashboard port                            |
 
 ```bash
-dash-app create school -t kiaalap
+dash-init create school -t kiaalap
 ```
 
 What happens:
@@ -88,7 +88,7 @@ What happens:
 - The project name is set in `pyproject.toml`; a `pyproject.toml` (from
   `requirements.txt`) and a `.gitignore` are generated if the template lacks
   them.
-- The hub is pinned to a specific commit in `src/dash_app/registry.json`, and
+- The hub is pinned to a specific commit in `src/dash_init/registry.json`, and
   CI fetches and checks every entry, so a change in the hub cannot silently
   break `create`.
 - A failed download leaves nothing behind. Errors say whether you're offline,
@@ -98,7 +98,7 @@ What happens:
 Any GitHub directory works the same way, un-curated:
 
 ```bash
-dash-app create demo -t gh:someone/repo/examples/my-app@v2.1
+dash-init create demo -t gh:someone/repo/examples/my-app@v2.1
 ```
 
 ## Why trust it
@@ -115,7 +115,7 @@ dash-app create demo -t gh:someone/repo/examples/my-app@v2.1
 
 - `deploy` subcommand
 - `--dir` option to create the project outside the current directory
-- Turn an existing app into a template (`dash-app create --from-project`)
+- Turn an existing app into a template (`dash-init create --from-project`)
 - More templates 
 
 ## Contributing
@@ -127,7 +127,7 @@ Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## Connect
 
-- PyPI: https://pypi.org/project/dash-app
+- PyPI: https://pypi.org/project/dash-init
 - LinkedIn: https://www.linkedin.com/in/budescode
 - PayPal: https://www.paypal.com/paypalme/omonbudeemma
 
