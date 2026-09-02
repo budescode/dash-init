@@ -38,6 +38,7 @@ dependencies.
 
 ```
 dash-init create <name>                      create a project from the default (minimal) template
+dash-init create .                           scaffold into the current directory (see below)
 dash-init create <name> -t <template>        choose a built-in or hub template
 dash-init create <name> -t gh:owner/repo/sub/dir[@ref]
                                             pull any directory on GitHub as a template
@@ -46,8 +47,28 @@ dash-init templates                          list everything available
 dash-init --version
 ```
 
-`create` refuses to overwrite a non-empty directory and never installs
-anything. It writes files and prints the next steps.
+### Into an existing project
+
+`dash-init create .` scaffolds into the current directory instead of making a
+new one. It never overwrites a file you already have, and it plays nicely with
+`uv`:
+
+```bash
+mkdir my-dashboard && cd my-dashboard
+uv init
+uvx dash-init create .
+```
+
+If a `pyproject.toml` is already present, dash-init leaves it alone and runs
+`uv add "dash>=4.4.1" ...` for you, so your file keeps its formatting and the
+dependencies land in `uv.lock` and your venv. Pass `--no-install` to print the
+command instead of running it. Without `uv` on your PATH, the commands to run
+are printed either way.
+
+`create <name>` refuses to overwrite a non-empty directory and never installs
+anything: it writes files and prints the next steps. Only `create .` with an
+existing `pyproject.toml` runs `uv add` (announced first, skippable with
+`--no-install`).
 
 ## Built-in templates
 

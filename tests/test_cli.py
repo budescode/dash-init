@@ -119,3 +119,104 @@ def test_pyproject_matches_requirements(template, tmp_path):
         if line.strip() and not line.startswith("#")
     ]
     assert sorted(data["project"]["dependencies"]) == sorted(reqs)
+
+
+# --------------------------------------------------------------------------- #
+# in-place creation: dash-init create .
+# --------------------------------------------------------------------------- #
+
+from types import SimpleNamespace  # noqa: E402
+
+from dash_init import cli as cli_mod  # noqa: E402
+
+
+def test_in_place_empty_dir_writes_everything(tmp_path):
+    proj = tmp_path / "my-dash"
+    proj.mkdir()
+    assert init(".", "minimal", proj) == proj
+    assert (proj / "app.py").is_file()
+    assert (proj / "pyproject.toml").is_file()      # no pre-existing one -> template's is written
+    assert (proj / "requirements.txt").is_file()
+
+
+def test_in_place_never_overwrites_existing_files(tmp_path, capsys):
+    proj = tmp_path / "my-dash"
+    proj.mkdir()
+    (proj / "app.py").write_text("sentinel")
+    init(".", "minimal", proj)
+    assert (proj / "app.py").read_text() == "sentinel"
+    assert "Skipped" in capsys.readouterr().out
+
+
+def test_in_place_with_pyproject_delegates_to_uv_add(tmp_path, monkeypatch):
+    proj = tmp_path / "myapp"
+    proj.mkdir()
+    original = '[project]\nname = "myapp"\ndependencies = []\n'
+    (proj / "pyproject.toml").write_text(original)
+    calls = {}
+    monkeypatch.setattr(cli_mod.shutil, "which", lambda name: "/usr/bin/uv")
+    monkeypatch.setattr(
+        cli_mod.subprocess, "run",
+        lambda cmd, cwd: calls.update(cmd=cmd, cwd=cwd) or SimpleNamespace(returncode=0),
+    )
+    init(".", "minimal", proj)
+    assert calls["cmd"][:2] == ["uv", "add"]
+    assert any(d.startswith("dash>=") for d in calls["cmd"][2:])
+    assert calls["cwd"] == proj
+    # the user's pyproject is not touched by us, and no competing files appear
+    assert (proj / "pyproject.toml").read_text() == original
+    assert not (proj / "requirements.txt").exists()
+
+
+def test_in_place_no_install_prints_command_instead(tmp_path, monkeypatch, capsys):
+    proj = tmp_path / "myapp"
+    proj.mkdir()
+    (proj / "pyproject.toml").write_text("[project]\n")
+    def explode(*a, **k):
+        raise AssertionError("subprocess must not run with install=False")
+    monkeypatch.setattr(cli_mod.subprocess, "run", explode)
+    init(".", "minimal", proj, install=False)
+    out = capsys.readouterr().out
+    assert "uv add" in out and "pip install" in out
+
+
+def test_in_place_without_uv_prints_command(tmp_path, monkeypatch, capsys):
+    proj = tmp_path / "myapp"
+    proj.mkdir()
+    (proj / "pyproject.toml").write_text("[project]\n")
+    monkeypatch.setattr(cli_mod.shutil, "which", lambda name: None)
+    init(".", "minimal", proj)
+    assert "left untouched" in capsys.readouterr().out
+
+
+def test_in_place_failed_uv_add_exits(tmp_path, monkeypatch):
+    proj = tmp_path / "myapp"
+    proj.mkdir()
+    (proj / "pyproject.toml").write_text("[project]\n")
+    monkeypatch.setattr(cli_mod.shutil, "which", lambda name: "/usr/bin/uv")
+    monkeypatch.setattr(
+        cli_mod.subprocess, "run", lambda cmd, cwd: SimpleNamespace(returncode=1)
+    )
+    with pytest.raises(SystemExit):
+        init(".", "minimal", proj)
+
+
+def test_in_place_rejects_remote_template(tmp_path):
+    with pytest.raises(SystemExit):
+        init(".", "gh:acme/hub/tpl", tmp_path)
+
+
+def test_in_place_rejects_invalid_dir_name(tmp_path):
+    proj = tmp_path / "9bad name"
+    proj.mkdir()
+    with pytest.raises(SystemExit):
+        init(".", "minimal", proj)
+
+
+def test_main_wires_no_install(tmp_path, monkeypatch, capsys):
+    proj = tmp_path / "cliapp"
+    proj.mkdir()
+    (proj / "pyproject.toml").write_text("[project]\n")
+    monkeypatch.chdir(proj)
+    assert main(["create", ".", "--no-install"]) == 0
+    assert "uv add" in capsys.readouterr().out

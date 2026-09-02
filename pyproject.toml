@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dash-init"
-version = "0.1.0"
+version = "0.2.0"
 description = "Project generator for Plotly Dash: one command to a running app."
 readme = "README.md"
 license = { text = "MIT" }
