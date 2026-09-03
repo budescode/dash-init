@@ -1,0 +1,19 @@
+[project]
+name = "{{app_name}}"
+version = "0.1.0"
+description = "{{app_title}}, a Plotly Dash app"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dash>=4.4.1",
+]
+
+# Optional extras: `uv sync --extra dev`
+[project.optional-dependencies]
+dev = [
+    "gunicorn",
+]
+
+# This is an application, not a library, so there is no [build-system]
+# section: install dependencies with `pip install -r requirements.txt`
+# or `uv sync` rather than `pip install .`.

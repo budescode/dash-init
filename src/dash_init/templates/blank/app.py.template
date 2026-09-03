@@ -1,0 +1,10 @@
+# {{app_title}}, created with dash-init on {{create_date}}
+from dash import Dash, html
+
+app = Dash(__name__, title="{{app_title}}")
+server = app.server  # exposed for production servers, e.g. gunicorn app:server
+
+app.layout = html.Div(html.H1("Hello, world!"))
+
+if __name__ == "__main__":
+    app.run(debug=True)

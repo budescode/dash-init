@@ -74,6 +74,7 @@ existing `pyproject.toml` runs `uv add` (announced first, skippable with
 
 | Name        | What you get                                                      |
 | ----------- | ----------------------------------------------------------------- |
+| `blank`     | Hello world: one `app.py`, no chart, no assets, dash only         |
 | `minimal`   | Single-file app with one callback (default)                       |
 | `multipage` | Dash Pages app: `app.py` shell + auto-routed `pages/` directory  |
 | `bootstrap` | Sidebar + KPI cards layout with dash-bootstrap-components         |
