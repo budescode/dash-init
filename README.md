@@ -11,9 +11,8 @@ python app.py                       # or: uv run app.py
 ```
 
 You get a working, current Dash app with a callback, a chart, an `assets/`
-folder, a README, `requirements.txt` + `pyproject.toml`, and a `.gitignore`.
-Not a throwaway "hello world" example, but the structure you'd have written
-yourself.
+folder, a README, `requirements.txt` + `pyproject.toml`, and a `.gitignore`:
+the structure you'd have written yourself.
 
 ```
 my-dashboard/
